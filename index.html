@@ -1,0 +1,2353 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Li Linfang">
+  <title>正则表达式与古典文献学习和研究</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.2.1/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.2.1/dist/reveal.css">
+  <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.2.1/dist/theme/blood.css" id="theme">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.26.0/themes/prism-tomorrow.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.26.0/plugins/line-numbers/prism-line-numbers.min.css">
+<link rel="stylesheet" href="./mycss/reveal-linenumber.css">
+<link rel="stylesheet" href="./mycss/reveal-scrollable.css">
+<link rel="stylesheet" href="./mycss/common.css">
+<link rel="stylesheet" href="./mycss/regex.css">
+<link rel="stylesheet" href="./mycss/slide-custom.css">
+<link rel="stylesheet" href="./mycss/table.css">
+<link rel="stylesheet" href="./mycss/alert.css">
+<link rel="stylesheet" href="./mycss/face-slide.css">
+<link rel="stylesheet" href="./mycss/end-slide.css">
+<link rel="stylesheet" href="./myjs/navbar.css">
+<link rel="stylesheet" href="./myjs/navbar0.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-state="title-slide-handler" data-visibility="hidden">
+  <h1 class="title">正则表达式与古典文献学习和研究</h1>
+  <p class="author">Li Linfang</p>
+  <p class="date">2026.1.20</p>
+</section>
+
+<section id="face-slide" class="title-slide slide level1"
+data-state="face-slide-body-class">
+<h1 data-state="face-slide-body-class">正则表达式</h1>
+
+
+<div class="title-area">
+<p class="title-show" style="font-size:2.4em">
+Regular Expression and Philology
+</p>
+<p class="author-name">
+The Department of Chinese Language and Culture, Peking University, Li
+Linfang
+</p>
+</div>
+<div class="title-lines">
+
+</div>
+<p class="course-name">
+Have Fun!</span>
+</p>
+</section>
+
+<section>
+<section id="前期准备" class="title-slide slide level1">
+<h1>前期准备</h1>
+
+</section>
+<section id="有没有这些需求" class="slide level2">
+<h2>有没有这些需求？</h2>
+<div class="columns">
+<div class="column left" style="width:35%;">
+<div class="fragment">
+<pre><code class="language-txt">说文解字注
+說文解字注
+説文解字注
+説文解字註</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-txt">所有子曰的文句：
+子曰：學而時習之……
+子在川上曰：……
+孔子曰……</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-txt">所有無“子曰”的文句</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-txt">只檢索《詩經》的注釋，而非正文？</code></pre>
+</div>
+</div><div class="column right" style="width:63%;">
+<div class="scrollbar">
+<div class="fragment">
+<pre><code class="language-txt">只检索汉字/标点/拉丁字母/日文假名？</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-txt">陸德明撰，黃焯彙校《經典釋文彙校》，中華書局，2006年，第216頁。
+陸德明撰，黃焯彙校《經典釋文彙校》，中華書局2006年版，216頁。</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-txt">如何清理以下内容？
+
+《鵲巢》相關討論 顯示更多訊息
+提到《鵲巢》的書籍 電子圖書館
+1 打開字典顯示相似段落相關討論顯示更多訊息  鵲巢: 
+維鵲有巢、維鳩居之。
+之子于歸、百兩御之。
+2 打開字典顯示相似段落相關討論顯示更多訊息  鵲巢: 
+維鵲有巢、維鳩方之。
+之子于歸、百兩將之。
+3 打開字典顯示相似段落相關討論顯示更多訊息  鵲巢: 
+維鵲有巢、維鳩盈之。
+之子于歸、百兩成之。</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="稍微归纳一下" class="slide level2">
+<h2>稍微归纳一下</h2>
+<div class="columns">
+<div class="column left">
+<ul>
+<li class="fragment">更为灵活的检索方式
+<ul>
+<li class="fragment">全面</li>
+<li class="fragment">独特</li>
+<li class="fragment">个性化</li>
+<li class="fragment">功能强大</li>
+<li class="fragment">简易轻量</li>
+<li class="fragment">适用面广</li>
+</ul></li>
+</ul>
+</div><div class="column right">
+<ul>
+<li class="fragment">更为方便的替换方式
+<ul>
+<li class="fragment">批量</li>
+<li class="fragment">便捷</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="最为常用的工具与参考文献" class="slide level2">
+<h2>最为常用的工具与参考文献</h2>
+<div class="columns">
+<div class="column left">
+<ul>
+<li><strong>regular expressions 101</strong>
+<ul>
+<li><a href="https://regex101.com/"
+class="uri">https://regex101.com/</a></li>
+</ul></li>
+</ul>
+<p><br></p>
+<ul>
+<li><strong>任意文本编辑器</strong>
+<ul>
+<li>Visual Studio Code</li>
+<li>EmEditor</li>
+</ul></li>
+<li><strong>dnGrep</strong></li>
+</ul>
+</div><div class="column right">
+<ul>
+<li><strong>Regular-Expressions.info</strong>
+<ul>
+<li><a href="https://www.regular-expressions.info/"
+class="uri">https://www.regular-expressions.info/</a></li>
+</ul></li>
+<li><strong>《精通正则表达式》</strong>
+<ul>
+<li>Jeffrey Friedl 著，余晟译</li>
+<li>电子工业出版社</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="本讲内容及其意义" class="slide level2">
+<h2>本讲内容及其意义</h2>
+<div class="columns">
+<div class="fragment column left">
+<ul>
+<li><em>快速上手</em> : 基本知识回顾</li>
+<li><em>进阶一</em> : 常用元字符</li>
+<li><span style="color:red">BETTER PRACTICE</span></li>
+<li><strong>匹配原理</strong></li>
+<li><em>进阶二</em> : 高级特性</li>
+<li><span style="color:red">DFA/NFA/Regex</span></li>
+</ul>
+</div><div class="column right" style="font-size:0.8em;">
+<ul>
+<li class="fragment">搜集资料
+<ul>
+<li class="fragment">查找</li>
+</ul></li>
+<li class="fragment">整理资料
+<ul>
+<li class="fragment">文件整理</li>
+<li class="fragment">文本清理</li>
+</ul></li>
+<li class="fragment">研究
+<ul>
+<li class="fragment">与计算机密切结合<span class="expl">方法</span></li>
+<li class="fragment">古文献学本身相关<span
+class="expl">视角/理论</span></li>
+</ul></li>
+<li class="fragment">其他
+<ul>
+<li class="fragment">工具与工具链的改变</li>
+<li class="fragment">通用性工具的优势</li>
+<li class="fragment">经验的积累与继承</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</section></section>
+<section>
+<section id="快速上手-基本知识回顾" class="title-slide slide level1">
+<h1>快速上手 : 基本知识回顾</h1>
+
+</section>
+<section id="查找替换-1" class="slide level2">
+<h2>查找替换 1</h2>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<p>🍳普通检索 <span class="expl">Word</span>
+<img src="./img/word-replace-example-qianlong.png"></p>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<p>🔬‍通配符 <span class="expl">Word</span>
+<img src="./img/word-wildcard-example-ziluzigong.png"></p>
+</div>
+</div>
+</div>
+</section>
+<section id="查找替换-2" class="slide level2">
+<h2>查找替换 2</h2>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<pre><code class="language-shell"># 通配符
+
+dir *.docx</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">(?# 正则表达式)
+
+^.+\.docx$</code></pre>
+</div>
+</div><div class="column right">
+<ul>
+<li class="fragment">具体字词 <span class="term-en">Literal
+Characters</span></li>
+<li class="fragment">符号 <span
+class="term-en">Metacharacters</span></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="模式与匹配-pattern-match" class="slide level2">
+<h2>模式与匹配 <span class="term-en">Pattern &amp; Match</span></h2>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<ul>
+<li>普通匹配</li>
+</ul>
+<pre><code class="language-text">abcdefg</code></pre>
+<pre><code class="language-regex">bcd</code></pre>
+</div>
+<div class="fragment">
+<ul>
+<li>复杂一些…</li>
+</ul>
+<pre><code class="language-text">惠子相梁，莊子往見之。</code></pre>
+<pre><code class="language-regex">孔子|孟子|[庄莊]子</code></pre>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<ul>
+<li>…再复杂一些…</li>
+</ul>
+<pre><code class="language-text">我正在读《中国古文献学史》。</code></pre>
+<pre><code class="language-regex">《.+》</code></pre>
+</div>
+<div class="fragment">
+<ul>
+<li>…再再复杂一些…</li>
+</ul>
+<pre><code class="language-text">我正在读《四书章句集注》和《朱子语类》。</code></pre>
+<pre><code class="language-regex">《[^》]+》</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="文本-literal-characters">文本 <span class="term-en">Literal
+Characters</span></h3>
+<div class="columns">
+<div class="column left">
+<pre><code class="language-regex">abc
+
+123
+
+Hello! Nice to see you!
+
+好好学习，天天向上。
+
+1\+1=2
+
+Here lies a line break\. \n</code></pre>
+</div><div class="column right">
+
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="元字符-metacharacters">元字符 <span
+class="term-en">Metacharacters</span></h3>
+<div class="fragment definition">
+<p>A metacharacter is a character that has a <strong>special
+meaning</strong> to a computer program, such as a shell interpreter or a
+regular expression (regex) engine.</p>
+<div class="source">
+<p>Wikipedia</p>
+</div>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">\ ^ $ . | ? * + ( ) [ {</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">. [abc] [^abc] \d
+? * +
+^ $
+| (abc) \1</code></pre>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="匹配单个字符">1 匹配单个字符</h3>
+<div class="columns">
+<div class="fragment column left">
+<pre><code class="language-regex">. [abc] [^abc] \d</code></pre>
+</div><div class="fragment column right">
+<pre><code class="language-regex">鲁.公
+鲁[隐桓庄闵]公
+[说説說]文解字
+子[曰云]
+[^孔]子</code></pre>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="提供计数功能">2 提供计数功能</h3>
+<div class="columns">
+<div class="fragment column left">
+<pre><code class="language-regex">?        # 零次一次
+*        # 零次或多次
++        # 一次或多次
+{8}      # 8次
+{9,}     # 9次或更多次
+{2,10}   # 2次到10次</code></pre>
+</div><div class="fragment column right">
+<pre><code class="language-regex">胡适之?
+[诗詩].*[礼禮]
+[诗詩].+[礼禮]
+[诗詩].{1,5}[礼禮]</code></pre>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="匹配位置">3 匹配位置</h3>
+<div class="fragment">
+<pre><code class="language-regex">^ $</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">^\d
+^王
+^2300014
+^2300014\d{3}$
+”$</code></pre>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="其他">4 其他</h3>
+<div class="fragment">
+<pre><code class="language-regex">| (abc) \1</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">王念孙|王引之
+
+(.)\1</code></pre>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="示例-metacharacters">示例 <span
+class="term-en">Metacharacters</span></h3>
+<div class="columns">
+<div class="column left">
+<div class="fragment" style="font-size:0.95em;">
+<pre><code class="language-text">《孟子集注》卷一：
+《孟子·梁惠王章句上》：“孟子見梁惠王。王曰：‘叟不遠千里而來，亦將有以利吾國乎？’孟子對曰：‘王何必曰利？亦有仁義而已矣……’”（朱熹《四書章句集注》，中華書局，1983年，第201頁。）
+《孟子·梁惠王章句上》：“孟子見梁襄王。”（朱熹《四書章句集注》，第206頁。）
+
+《孟子集注》卷十四：
+《孟子·盡心章句下》：“孟子曰：‘春秋無義戰。’”（朱熹《四書章句集注》，第364頁。）
+
+《孟子集注》卷八：
+《孟子·離婁章句下》：“孟子告齊宣王曰：“‘君之視臣如手足，則臣視君如腹心；君之視臣如犬馬，則臣視君如國人；君之視臣如土芥，則臣視君如寇讎。’”（朱熹《四書章句集注》，第290頁。）
+
+《孟子正義》卷六：
+《禮記·投壺篇》注“奇則縮諸純”，《釋文》云：“縮，直也。”《廣雅·釋詁》云：“直，義也。”縮之爲義，猶縮之爲直。蓋縮之訓爲從，從故直。從亦順也，順故義；義者，宜也。趙氏既以義訓縮，又申之云“不義不直”，明義卽直也。（焦循撰，沈文倬點校《孟子正義》，中華書局，1987年，第193頁。）</code></pre>
+</div>
+</div><div class="column right">
+<div style="position: relative">
+
+<div class="fragment fade-in" style="position:absolute;width:100%;">
+<pre><code class="language-regex">. [abc] [^abc] \d</code></pre>
+<div class="fragment fade-in-then-out">
+<pre><code class="language-regex">
+梁.王
+梁[惠襄]王
+
+[：，“”‘’……。？（）《》·]
+[^：，“”‘’……。？（）《》·\n]
+\d\d\d\d年</code></pre>
+</div>
+</div>
+
+<div class="fragment fade-in" style="position:absolute;width:100%;">
+<pre><code class="language-regex">? * +</code></pre>
+<div class="fragment fade-in-then-out">
+<pre><code class="language-regex">卷[〇一二三四五六七八九十]+
+[：，“”‘’……。？（）《》·]+
+[^：，“”‘’……。？（）《》·\n]+
+\d+年
+
+《[^》]+》
+
+孟子對?曰
+
+(# Question:)
+孟子.*曰</code></pre>
+</div>
+</div>
+
+<div class="fragment fade-in" style="position:absolute;width:100%;">
+<pre><code class="language-regex">^ $</code></pre>
+<div class="fragment fade-in-then-out">
+<pre><code class="language-regex">^《
+：$
+^.*：$
+
+^《[^》]+》卷[〇一二三四五六七八九十]+：$</code></pre>
+</div>
+</div>
+
+<div class="fragment fade-in" style="position:absolute;width:100%;">
+<pre><code class="language-regex">| (abc) \1</code></pre>
+<div class="fragment fade-in-then-out">
+<pre><code class="language-regex">梁惠王|梁襄王|齊宣王
+(梁惠|梁襄|齊宣)王
+(梁[惠襄]|齊宣)王
+
+^《孟子集注》卷(.+)：$
+《孟子集注》第\1卷：</code></pre>
+</div>
+</div>
+
+<div class="fragment fade-in" style="position:absolute;width:100%;">
+<pre><code class="language-regex">. [abc] [^abc] \d
+? * + {min, max}
+^ $
+| (abc) \1</code></pre>
+<div class="scrollbar" style="height:35rem;">
+<div class="fragment fade-in">
+<p>❓综合应用题</p>
+<p>请将原文中的出处改为以下样式：</p>
+<pre><code class="language-text">［朱熹：《四書章句集注》，中華書局1983年版，201頁。］
+［朱熹：《四書章句集注》，206頁。］</code></pre>
+</div>
+<div class="fragment fade-in">
+<pre><code class="language-regex">（(.+)《([^》]+)》(，(.+)，(\d+)年)?，第(\d+)頁。）
+［\1：《\2》，\4\5年版，\6頁。］
+
+，年版，
+，</code></pre>
+</div>
+<div class="fragment fade-in">
+<pre><code class="language-regex"># PCRE2
+［$1：《$2》，${3:+$4$5年版，:}$6頁。］</code></pre>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="转义字符-escape-character">转义字符 <span class="term-en">Escape
+Character</span></h3>
+<div class="fragment">
+<div class="definition">
+<p>In computing and telecommunication, an escape character is a
+character that invokes an <strong>alternative interpretation</strong> on
+the following characters in a character sequence.</p>
+<div class="source">
+<p>Wikipedia</p>
+</div>
+</div>
+</div>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<ul>
+<li><code>\</code>+元字符=非元字符</li>
+</ul>
+<pre><code class="language-regex">\* \+ \[\] \\</code></pre>
+</div>
+<div class="fragment">
+<ul>
+<li><code>\</code>+某些非元字符=元字符</li>
+</ul>
+<pre><code class="language-regex">\1 \z \Z \Q \E</code></pre>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<ul>
+<li><code>\</code>+某些非元字符=控制字符</li>
+</ul>
+<pre><code class="language-regex">\t \n</code></pre>
+</div>
+<div class="fragment">
+<ul>
+<li><code>\</code>+某些非元字符=该字符本身</li>
+</ul>
+<pre><code class="language-regex">\y</code></pre>
+</div>
+</div>
+</div>
+
+</section>
+<section class="slide level2">
+
+<h3 id="编程语言中字符串的转义">编程语言中字符串的转义</h3>
+<div class="fragment">
+<pre><code class="language-python">&quot;\n \t \\&quot;</code></pre>
+</div>
+<div class="fragment alert alert-warning">
+<div class="alert-warning-svg">
+
+</div>
+<p>需特别留意<strong>相应编程语言中字符串转义</strong>的情况！</p>
+</div>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<pre><code class="language-python">re.match(&quot;\\&quot;,&quot;\\&quot;)</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-ipython">error: bad escape (end of pattern) at position 0</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-python">re.match(&quot;\\\\&quot;,&quot;\\&quot;)
+re.match(r&quot;\\&quot;,&quot;\\&quot;)</code></pre>
+</div>
+</div><div class="column right">
+<div style="margin-left:5rem;">
+<p><img src="./svg/ico_light_bulb_2.svg" width="320rem">
+<img src="./svg/brain-thinking.svg" width="350rem"></p>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="编程语言中字符串的转义-2">编程语言中字符串的转义 2</h3>
+<div class="fragment table-real no-border" style="margin-bottom:1rem;">
+<table>
+<thead>
+<tr>
+<th>PL</th>
+<th>hex</th>
+<th>RE</th>
+<th>explantion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t</code></td>
+<td>74</td>
+<td>74</td>
+<td><code>t</code></td>
+</tr>
+<tr>
+<td><code>\t</code></td>
+<td>5C 74</td>
+<td>09</td>
+<td><code>tab</code></td>
+</tr>
+<tr>
+<td><code>\\t</code></td>
+<td>5C 5C 74</td>
+<td>5C 74</td>
+<td><code>\</code>+<code>t</code>=<code>tab</code></td>
+</tr>
+<tr>
+<td><code>\\\t</code></td>
+<td>5C 5C 5C 74</td>
+<td>5C 09</td>
+<td><code>\</code>+<code>tab</code>=<code>tab</code></td>
+</tr>
+<tr>
+<td><code>\\\\t</code></td>
+<td>5C 5C 5C 5C 74</td>
+<td>5C 5C 74</td>
+<td><code>\</code>+<code>\</code>+<code>t</code>=<code>\</code>+<code>t</code></td>
+</tr>
+<tr>
+<td><code>\\\\\t</code></td>
+<td>5C 5C 5C 5C 5C 74</td>
+<td>5C 5C 09</td>
+<td><code>\</code>+<code>\</code>+<code>tab</code>=<code>\</code>+<code>tab</code></td>
+</tr>
+<tr>
+<td>　</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>\\</code></td>
+<td>5C 5C</td>
+<td>5C</td>
+<td><code>\</code>=<code>ERROR</code></td>
+</tr>
+<tr>
+<td><code>\\\\</code></td>
+<td>5C 5C 5C 5C</td>
+<td>5C 5C</td>
+<td><code>\</code>+<code>\</code>=<code>\</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fragment alert alert-info">
+<div class="alert-info-svg">
+
+</div>
+<p>Python 的相关说明参见：<a
+href="https://docs.python.org/3/library/re.html">https://docs.python.org/3/library/re.html</a></p>
+</div>
+</section>
+<section id="常用工具与软件" class="slide level2">
+<h2>常用工具与软件</h2>
+<div class="columns">
+<div class="column left">
+<ul>
+<li><strong>dnGREP</strong> <span class="expl">Windows</span>
+<ul>
+<li><a href="http://dngrep.github.io/"
+class="uri">http://dngrep.github.io/</a></li>
+</ul></li>
+<li><strong>PowerGREP</strong> <span class="expl">Windows</span>
+<ul>
+<li><a href="https://www.powergrep.com/"
+class="uri">https://www.powergrep.com/</a></li>
+</ul></li>
+<li><strong>RegexBuddy</strong> <span class="expl">Windows</span>
+<ul>
+<li><a href="https://www.regexbuddy.com/"
+class="uri">https://www.regexbuddy.com/</a></li>
+</ul></li>
+<li><strong>regular expressions 101</strong>
+<ul>
+<li><a href="https://regex101.com/"
+class="uri">https://regex101.com/</a></li>
+</ul></li>
+<li><strong>REGEXPER</strong>
+<ul>
+<li><a href="https://regexper.com/"
+class="uri">https://regexper.com/</a></li>
+</ul></li>
+</ul>
+</div><div class="column right">
+<ul>
+<li><strong>Regular Expression Visualizer</strong>
+<ul>
+<li><a href="https://blog.robertelder.org/regular-expression-visualizer"
+class="uri">https://blog.robertelder.org/regular-expression-visualizer</a></li>
+</ul></li>
+<li><strong>Regular-Expressions.info</strong>
+<ul>
+<li><a href="https://www.regular-expressions.info/"
+class="uri">https://www.regular-expressions.info/</a></li>
+</ul></li>
+<li><strong>《精通正则表达式》</strong>
+<ul>
+<li>Jeffrey Friedl 著，余晟译</li>
+<li>电子工业出版社</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="section" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column left">
+<p><img src="./img/arithmetictextbook-1.png" style="margin-top: -2em;margin-right: -1em;"></p>
+</div><div class="column right">
+<div class="fragment">
+<p><img src="./img/arithmetictextbook-2.png" style="margin-top: -2em; margin-left:-1em;"></p>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="进阶一-常用元字符" class="title-slide slide level1">
+<h1>进阶一 : 常用元字符</h1>
+
+</section>
+<section id="单个匹配" class="slide level2">
+<h2>单个匹配</h2>
+</section>
+<section class="slide level2">
+
+<h3 id="字符组-character-classes-character-sets">字符组 <span
+class="term-en">Character Classes / Character Sets</span></h3>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<ul>
+<li>其本样式</li>
+</ul>
+<pre><code class="language-regex">[a-z]
+[^a-z]</code></pre>
+</div>
+<div class="fragment">
+<ul>
+<li>字符组中的元字符</li>
+</ul>
+</div>
+<div class="fragment">
+<p>问题：<code>( * ] \ ^ - +</code>哪个是字符组的元字符？</p>
+</div>
+<div class="fragment">
+<p>问题：<code>[^.]</code> 匹配的是什么？</p>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">] \ ^ -</code></pre>
+</div>
+<div class="alert alert-warning fragment">
+<div class="alert-warning-svg">
+
+</div>
+<p>元字符在字符组内外是有<strong>差异</strong>的！</p>
+</div>
+</div><div class="column right">
+<div class="scrollbar">
+<div class="fragment">
+<ul>
+<li>排除型字符组 <span class="term-en">Negated Character
+Classes</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p>问题：<code>戴[^震]</code>
+能匹配哪（几）个字符串<code>西汉戴德</code> <code>戴圣</code>
+<code>大小戴</code>？</p>
+</div>
+<div class="alert alert-warning fragment">
+<div class="alert-warning-svg">
+
+</div>
+<p>排除型字符组仍然需要<strong>匹配字符</strong>！</p>
+</div>
+<div class="fragment">
+<p>问题： <code>《[^）]+</code>的匹配状况？</p>
+<pre><code class="language-text">《文王有聲》，繼伐也。武王能廣文王之聲，卒其伐功也。（繼伐者，文王伐崇，而武王伐紂。）
+《生民》，尊祖也。后稷生於姜嫄文、武之功起於后稷，故推以配天焉。
+《下武》，繼文也。武王有聖德，復受天命，能昭先人之功焉。（繼文者，繼文王之王業而成之。昭，明也。）</code></pre>
+</div>
+<div class="alert alert-warning fragment">
+<div class="alert-warning-svg">
+
+</div>
+<p>在多行检索时，排除型字符组会<strong>匹配换行符</strong>！</p>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="字符组-character-classes-character-sets-2">字符组 <span
+class="term-en">Character Classes / Character Sets</span> 2</h3>
+<div class="columns">
+<div class="column left">
+
+<div style="position: relative">
+<div class="fragment fade-in-then-out" data-fragment-index="0"
+style="position:absolute;width:100%;">
+<ul>
+<li>并集</li>
+</ul>
+<pre><code class="language-regex">[a-zA-Z0-9]
+[abc你我他]</code></pre>
+<pre><code class="language-regex">[\u4e00-\u9fff\u3400-\u4dff]</code></pre>
+</div>
+<div class="fragment fade-in" data-fragment-index="1"
+style="position:absolute;width:100%;">
+<ul>
+<li>Subtraction 差集</li>
+</ul>
+<div class="fragment">
+<pre><code class="language-regex">[class-[subtract]]
+[a-z-[aeiou]]</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">[\p{han}-[\u4e00-\u9fff]]</code></pre>
+</div>
+<div class="scrollbar" style="height:25rem;">
+<div class="fragment" style="font-size:0.8em">
+<pre><code class="language-python"># Chinese Characters from https://ctext.org/font-test-page/zh
+
+import regex
+
+s = &quot;&quot;&quot;字的類型 示範  您的瀏覽器
+繁體中文        義、禮、說、選
+簡體中文        义、礼、说、选
+CJK擴展A區     㡛、㬐、㖧、䵍
+CJK擴展B區     𣚣、䶅、𪘆、𦞕
+CJK擴展C區     𪢨、𪪖、𫔺、𫜴
+CJK擴展D區     𫝀、𫞂、𫝻、𫠝
+CJK擴展E區     𫠫、𬚚、𬳕、𬺡
+&quot;&quot;&quot;
+
+regex.findall(r&quot;[\p{han}--[\u4e00-\u9fff]]&quot;, s, regex.V1)
+# 排除C区
+regex.findall(r&quot;[\p{han}--[\U0002A700-\U0002B734]]&quot;, s, regex.V1)</code></pre>
+</div>
+</div>
+</div>
+</div>
+<p></p>
+</div><div class="column right">
+<div class="fragment">
+<ul>
+<li>Intersection 交集</li>
+</ul>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">[class&amp;&amp;[intersect]]
+[a-z&amp;&amp;[^aeiou]]</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">[\p{han}&amp;&amp;[^\u4e00-\u9fff]]</code></pre>
+</div>
+<div class="alert alert-warning fragment">
+<div class="alert-warning-svg">
+
+</div>
+<p>要特别注意<strong>兼容性</strong>的问题。</p>
+</div>
+<div class="alert alert-info fragment" style="font-size:0.7em;">
+<div class="alert-info-svg"
+style="margin-left:2em; margin-right:1.5em; transform: scale(2.5);">
+
+</div>
+<p>Python 的 <code>regex</code> 包支持更复杂的字符组运算。 详 <a
+href="https://pypi.org/project/regex/"
+class="uri">https://pypi.org/project/regex/</a> .</p>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="字符组简记法">字符组简记法</h3>
+<pre><code class="language-regex">(?# digit)
+\d [0-9]
+\D [^\d]
+
+(?# word character)
+\w [A-Za-z0-9_]
+\W [^\w]
+
+(?# white character)
+\s [ \t\r\n\f] (?# 根据流派，还可能匹配其他)
+\S [^\s]</code></pre>
+</section>
+<section class="slide level2">
+
+<h3 id="点号-dot">点号 <span class="term-en">Dot</span></h3>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<pre><code class="language-regex">.</code></pre>
+</div>
+<div class="fragment">
+<p>问题：以下正则表达式的匹配情况？</p>
+<pre><code class="language-regex">子曰：.+学</code></pre>
+<pre><code class="language-text">子曰：
+德之不修，学之不讲，闻义不能徙，不善不能改，是吾忧也。</code></pre>
+</div>
+<div class="alert alert-warning fragment" style="font-size:0.8em;">
+<div class="alert-warning-svg">
+
+</div>
+<p><code>.</code>一般不匹配换行符。 除非使用“单行模式”<span
+class="term-en">single-line mode</span>。</p>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<ul>
+<li>关于换行符 <span class="term-en">Line Break Characters</span></li>
+</ul>
+</div>
+<div class="fragment">
+<pre><code class="language-python">&quot;\n&quot;   # Unix, Unix-like (Linux, macOS, etc.)
+&quot;\r\n&quot; # Windows, DOS
+&quot;\r&quot;   # classic Mac OS</code></pre>
+</div>
+<div class="fragment">
+<div class="alert alert-info">
+<div class="alert-info-svg">
+
+</div>
+<p>各种正则流派一般都将<code>\n</code>作为换行符。</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="计数与量词" class="slide level2">
+<h2>计数与量词</h2>
+</section>
+<section class="slide level2">
+
+<h3 id="主要元字符">主要元字符</h3>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<pre><code class="language-regex">? * + {min, max}
+? {0, 1}
+* {0, }
++ {1, }</code></pre>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<pre><code class="language-regex">.*
+.+
+
+李太?白
+胡适之?
+
+[〇一二三四五六七八九]{1, 3}
+子曰.{1,10}书</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="贪婪与非贪婪-greediness-laziness">贪婪与非贪婪 <span
+class="term-en">Greediness &amp; Laziness</span></h3>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<pre><code class="language-text">愚謂當廣之爲二十一經。《禮》益以《大戴禮》，《春秋》益以《國語》、《史記》、《漢書》、《資治通鑑》，《周禮》“六藝”之書數，《爾雅》未足當之也，取《說文解字》、《九章算經》、《周髀算經》以益之，……
+
+段玉裁《十經齋記》，段玉裁撰、鍾敬華校點《經韻樓集》，上海古籍出版社，2008年，第236頁。</code></pre>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<pre><code class="language-regex">《.+》</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">《[^》]+》</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">《.+?》</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">*?
++?
+??
+{0, 10}?</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="位置-anchors" class="slide level2">
+<h2>位置 <span class="term-en">Anchors</span></h2>
+</section>
+<section class="slide level2">
+
+<h3 id="首末">首末</h3>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<pre><code class="language-regex">^ $
+^ \A
+\Z \z</code></pre>
+</div>
+<div class="fragment">
+<ul>
+<li>multiline mode</li>
+<li>newline</li>
+</ul>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<pre><code class="language-text">好好学习\n天天向上\n学</code></pre>
+<pre><code class="language-regex">^学$</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="单词分界">单词分界</h3>
+
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<pre><code class="language-regex">\b \B</code></pre>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<pre><code class="language-regex">\bword\b
+\bis\b</code></pre>
+<pre><code class="language-text">This is an example.</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="多选结构-alternation" class="slide level2">
+<h2>多选结构 <span class="term-en">Alternation</span></h2>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<pre><code class="language-regex">四库|四库全书|四库全书总目|四库全书总目提要
+
+胡适|胡适之
+
+星际|星际争霸</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">四库全书总目提要|四库全书总目|四库全书|四库
+
+胡适(之)?
+
+星际(争霸)?</code></pre>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<p>❓匹配结果如何？</p>
+<pre><code class="language-text">我书架上有一本《四库全书总目提要》。</code></pre>
+<pre><code class="language-regex">总目|总目提要|四库全书总目|四库全书总目提要</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="分组捕获反向引用-groupcapturebackreferences"
+class="slide level2">
+<h2>分组、捕获、反向引用 <span
+class="term-en">Group/Capture/Backreferences</span></h2>
+<pre><code class="language-regex">(abc) \1 \2 $1 $2
+
+(?:abc)</code></pre>
+</section>
+<section id="环视-lookaround" class="slide level2">
+<h2>环视 <span class="term-en">lookaround</span></h2>
+<div class="columns">
+<div class="column left">
+<ul>
+<li class="fragment">Lookaround</li>
+<li class="fragment">Lookahead
+<ul>
+<li class="fragment">Positive</li>
+<li class="fragment">Negative</li>
+</ul></li>
+<li class="fragment">Lookbehind
+<ul>
+<li class="fragment">Positive</li>
+<li class="fragment">Negative</li>
+</ul></li>
+</ul>
+</div><div class="column right">
+<div class="fragment">
+<pre><code class="language-regex">(?=abc)
+(?!abc)
+(?&lt;=abc)
+(?&lt;!abc)</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="注意事项">注意事项</h3>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<ul>
+<li>non-fixed width</li>
+</ul>
+<pre><code class="language-regex">(?=.+abc)
+(?!.+abc)
+(?&lt;=.+abc)
+(?&lt;!.+abc)</code></pre>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<ul>
+<li>Atomic</li>
+</ul>
+<pre><code class="language-regex">(?=(\d+))\w+\1</code></pre>
+<pre><code class="language-text">123x12</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="其他妙用">其他妙用</h3>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<ul>
+<li>包含</li>
+</ul>
+<pre><code class="language-regex">^(?=.*a)(?=.*b)
+^(?=.*a)(?=.*b).*$
+^(?=.*勇)(?=.*仁).*$</code></pre>
+</div>
+<div class="fragment">
+<ul>
+<li>不含</li>
+</ul>
+<pre><code class="language-regex">^(?:(?!abc).)*$
+^(?!.*abc).*$
+
+^(?:(?!子路).)*$
+^(?!.*子路).*$</code></pre>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<ul>
+<li>ABAC 式</li>
+</ul>
+<pre><code class="language-text">宜室宜家
+无时无刻
+人来人往
+载歌载舞
+
+考虑考虑
+嘈嘈切切
+关关雎鸠
+在河之洲</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">(.)(.)(?&lt;!\1)\1.(?&lt;!\1|\2)</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="unicode" class="slide level2">
+<h2>Unicode</h2>
+
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<ul>
+<li>Hex and Unicode escapes</li>
+</ul>
+<pre><code class="language-regex">\x61   # a
+
+\u0061 # a
+\u4e00 # 一
+
+\x{4e00}
+\x{2a6a5} # 𪚥</code></pre>
+<pre><code class="language-python">u&quot;\u4e00&quot;
+u&quot;\U0002a6a5&quot;
+
+re.match(r&quot;\U0002a6a5&quot;, &quot;𪚥&quot;)</code></pre>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<ul>
+<li>Unicode properties, scripts, and blocks:</li>
+</ul>
+<pre><code class="language-regex">\p{Prop} \P{Prop}
+
+\p{P}
+
+\p{Latin}
+\p{Han}
+\p{Hiragana}
+\p{Katakana}
+
+\p{InCJK_Unified_Ideographs_Extension_A}
+\p{InYijing_Hexagram_Symbols}  # ䷀</code></pre>
+<div class="alert alert-info" style="font-size:0.6em;">
+<div class="alert-info-svg">
+
+</div>
+<p>More <a href="https://www.regular-expressions.info/unicode.html"
+class="uri">https://www.regular-expressions.info/unicode.html</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<p><img src="./img/MasterRegex-P118-Table3-7-OctalHexRegexEscapesTheirRegexesSupport.png" style="margin-top:-3.5em;"></p>
+</section>
+<section class="slide level2">
+
+<p><img src="./img/MasterRegex-P123-Table3-9-BasicUnicodeSub-Properties.png" style="margin-top:-3.5em;"></p>
+</section>
+<section id="regex-flags" class="slide level2">
+<h2>Regex Flags</h2>
+
+<ul>
+<li class="fragment"><code>g</code>: <strong>g</strong>lobal.</li>
+<li class="fragment"><code>m</code>: <strong>m</strong>ulti line.
+<code>^</code> <code>$</code></li>
+<li class="fragment"><code>s</code>: <strong>s</strong>ingle line.
+<code>.</code></li>
+<li class="fragment"><code>u</code>: <strong>u</strong>nicode.</li>
+<li class="fragment"><code>i</code>: <strong>i</strong>nsensitive. Case
+insensitive <code>[a-zA-Z]</code>.</li>
+<li class="fragment"><code>U</code>: <strong>U</strong>ngreedy.</li>
+</ul>
+</section></section>
+<section>
+<section id="better-best-practice" class="title-slide slide level1">
+<h1>BETTER (BEST?) PRACTICE</h1>
+
+</section>
+<section id="可以考虑的实践平台" class="slide level2">
+<h2>可以考虑的实践平台</h2>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<ul>
+<li>Jupyter Notebook</li>
+<li>JupyterHub</li>
+</ul>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<ul>
+<li>尝试
+<ul>
+<li>python</li>
+<li>jupyter-notebook</li>
+<li>markdown</li>
+<li>terminal</li>
+<li>强迫使用 terminal</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="学会提问" class="slide level2">
+<h2>学会提问</h2>
+<div class="columns">
+<div class="column left">
+<ul>
+<li class="fragment">WHERE
+<ul>
+<li class="fragment"><code>man</code>: <code>man grep</code>
+<code>man re_format</code></li>
+<li class="fragment">Documentation <span class="expl">RTFM</span></li>
+<li class="fragment">Search Engine <span class="expl">STFW</span></li>
+<li class="fragment">Forum: <a href="https://stackoverflow.com"
+class="uri">https://stackoverflow.com</a></li>
+<li class="fragment">AI (ChatGPT例)
+<ul>
+<li class="fragment">问什么；如何问</li>
+<li class="fragment">如何对待其输出</li>
+</ul></li>
+</ul></li>
+</ul>
+</div><div class="column right">
+<div class="fragment">
+<ul>
+<li>HOW
+<ul>
+<li>明确问题</li>
+<li>分解问题</li>
+<li>把未知导向已知</li>
+<li>例：vim 模式的中英文切换
+<ul>
+<li><code>normal mode</code> 之中文输入</li>
+<li>关键：状态/状态切换（插入切换至普通Key: Escape）</li>
+<li>input method/editor plugin/global shortcuts</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="工欲善其事必先利其器" class="slide level2">
+<h2>工欲善其事，必先利其器</h2>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<ul>
+<li><code>grep</code> <code>egrep (grep -E)</code> <code>rg</code>
+<ul>
+<li><code>grep -e ... -e ...</code> <span class="expl">or</span></li>
+<li><code>grep -v</code></li>
+</ul></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li><code>vim</code>
+<ul>
+<li><code>... |&amp; vim -</code> <span class="expl">pipe &amp;
+toolchain</span></li>
+<li><code>%! grep ...</code></li>
+</ul></li>
+</ul>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<ul>
+<li>练习
+<ul>
+<li>查检《论语》含“子曰”之篇章，及不含“子曰”之篇章</li>
+<li>构造一章节顺序乱之《论语》篇章，再将之排列整齐</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="匹配原理" class="title-slide slide level1">
+<h1>匹配原理</h1>
+
+</section>
+<section id="匹配的主要原则" class="slide level2">
+<h2>匹配的主要原则</h2>
+</section>
+<section class="slide level2">
+
+<h3
+id="规则1优先选择最左端的匹配结果">规则1：优先选择最左端的匹配结果</h3>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<div style="font-size:0.9em">
+<ul>
+<li><strong>Rule 1: The Match That Begins Earliest Wins</strong></li>
+</ul>
+<p>the match is <em>first attempted at the very beginning of the
+string</em> to be searched (just beforethe first character). “Attempted”
+means that <em>every permutation of the entire(perhaps complex) regex is
+tested starting right at that spot</em>. If <em>all possibilities are
+exhausted</em> and a match is not found, the <em>complete expression is
+re-tried starting from just before the second character</em>. This full
+retry occurs at each position in the string <em>until a match is
+found</em>. A “no match” result is reported only if no match is found
+after the full retry has been attempted at each position all the way to
+the end of the string (just after the last character).</p>
+<p>(P148)</p>
+</div>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<pre><code class="language-flow">st=&gt;start: Start
+op1=&gt;operation: n=0
+op2=&gt;operation: 从第n个字符之前尝试匹配
+op3=&gt;operation: n=n+1
+cond1=&gt;condition: 是否匹配
+cond2=&gt;condition: n==字符串长度
+o1=&gt;inputoutput: 输出匹配项
+o2=&gt;inputoutput: 不匹配
+e=&gt;end
+
+st-&gt;op1-&gt;op2-&gt;cond1
+cond1(yes)-&gt;o1-&gt;e
+cond1(no)-&gt;op3(right)-&gt;cond2
+cond2(yes)-&gt;o2-&gt;e
+cond2(no)-&gt;op2</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="规则2标准量词是匹配优先的">规则2：标准量词是匹配优先的</h3>
+<div class="columns">
+<div class="column left" style="width:60%;">
+<div class="fragment">
+<ul>
+<li><strong>Rule 2: The Standard Quantifiers Are Greedy</strong>
+<ul>
+<li>这些尝试总是希望获得<strong>最长</strong>的匹配</li>
+<li>强迫 &amp; 释放/交还</li>
+<li>先来先服务</li>
+</ul></li>
+</ul>
+</div>
+</div><div class="column right" style="width:38%;">
+<div class="fragment">
+<pre><code class="language-text">Copyright 2003</code></pre>
+<pre><code class="language-regex">^.*([0-9]+)</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="回溯-backtracking" class="slide level2">
+<h2>回溯 <span class="term-en">Backtracking</span></h2>
+</section>
+<section class="slide level2">
+
+<h3 id="回溯-alternation">回溯 Alternation</h3>
+<div class="table-real">
+<table>
+<thead>
+<tr>
+<th>Regex</th>
+<th>Text</th>
+<th>Saved states</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ˇ</strong>孔夫?子</td>
+<td><strong>ˇ</strong>孔子</td>
+<td></td>
+</tr>
+<tr>
+<td>孔<strong>ˇ</strong>夫?子</td>
+<td>孔<strong>ˇ</strong>子</td>
+<td>R:孔夫?<strong>ˇ</strong>子   T:孔<strong>ˇ</strong>子</td>
+</tr>
+<tr>
+<td>孔夫?<strong>ˇ</strong>子</td>
+<td>孔<strong>ˇ</strong>子</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="回溯-alternation-1">回溯 Alternation</h3>
+<ul>
+<li>S1: character 0</li>
+</ul>
+<div class="table-real">
+<table>
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 16%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr>
+<th>Regex</th>
+<th>Text</th>
+<th>Saved states</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(<strong>ˇ</strong>新校互註|新校互注)宋本(广|廣)韻</td>
+<td><strong>ˇ</strong>新校互注宋本广韵</td>
+<td>R:(新校互註|<strong>ˇ</strong>新校互注)宋本(广|廣)韻<br />T:<strong>ˇ</strong>新校互注宋本广韵</td>
+</tr>
+<tr>
+<td>(新校互<strong>ˇ</strong>註|新校互注)宋本(广|廣)韻</td>
+<td>新校互<strong>ˇ</strong>注宋本广韵</td>
+<td>R:(新校互註|<strong>ˇ</strong>新校互注)宋本(广|廣)韻<br />T:<strong>ˇ</strong>新校互注宋本广韵</td>
+</tr>
+<tr>
+<td>(新校互註|<strong>ˇ</strong>新校互注)宋本(广|廣)韻</td>
+<td><strong>ˇ</strong>新校互注宋本广韵</td>
+<td></td>
+</tr>
+<tr>
+<td>(新校互註|新校互注)宋本(<strong>ˇ</strong>广|廣)韻</td>
+<td>新校互注宋本<strong>ˇ</strong>广韵</td>
+<td>R:(新校互註|新校互注)宋本(广|<strong>ˇ</strong>廣)韻<br />T:新校互注宋本<strong>ˇ</strong>广韵</td>
+</tr>
+<tr>
+<td>(新校互註|新校互注)宋本(广|廣)<strong>ˇ</strong>韻</td>
+<td>新校互注宋本广<strong>ˇ</strong>韵</td>
+<td>R:(新校互註|新校互注)宋本(广|<strong>ˇ</strong>廣)韻<br />T:新校互注宋本<strong>ˇ</strong>广韵</td>
+</tr>
+<tr>
+<td>(新校互註|新校互注)宋本(广|<strong>ˇ</strong>廣)韻</td>
+<td>新校互注宋本<strong>ˇ</strong>广韵</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>S2-S8 character 1 2 3 4 5 6 7</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="回溯-repetiton">回溯 Repetiton</h3>
+<ul>
+<li>S1 S2: character 0 1</li>
+<li>S3: character 2</li>
+</ul>
+<div class="scrollbar" style="height:35rem;">
+<div class="table-real">
+<table>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 13%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr>
+<th>Regex</th>
+<th>Text</th>
+<th>Saved states</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ˇ</strong>《.+》</td>
+<td>这本<strong>ˇ</strong>《诗经》好看！</td>
+<td></td>
+</tr>
+<tr>
+<td>《<strong>ˇ</strong>.+》</td>
+<td>这本《诗经》好看！<strong>ˇ</strong></td>
+<td>这本《诗<strong>ˇ</strong>经》好看！<br />这本《诗经<strong>ˇ</strong>》好看！<br />这本《诗经》<strong>ˇ</strong>好看！<br />这本《诗经》好<strong>ˇ</strong>看！<br />这本《诗经》好看<strong>ˇ</strong>！</td>
+</tr>
+<tr>
+<td>《.+<strong>ˇ</strong>》</td>
+<td>这本《诗经》好看！<strong>ˇ</strong></td>
+<td>这本《诗<strong>ˇ</strong>经》好看！<br />这本《诗经<strong>ˇ</strong>》好看！<br />这本《诗经》<strong>ˇ</strong>好看！<br />这本《诗经》好<strong>ˇ</strong>看！<br />这本《诗经》好看<strong>ˇ</strong>！</td>
+</tr>
+<tr>
+<td>《.+<strong>ˇ</strong>》</td>
+<td>这本《诗经》好看<strong>ˇ</strong>！</td>
+<td>这本《诗<strong>ˇ</strong>经》好看！<br />这本《诗经<strong>ˇ</strong>》好看！<br />这本《诗经》<strong>ˇ</strong>好看！<br />这本《诗经》好<strong>ˇ</strong>看！</td>
+</tr>
+<tr>
+<td>《.+<strong>ˇ</strong>》</td>
+<td>这本《诗经》好看<strong>ˇ</strong>！</td>
+<td>这本《诗<strong>ˇ</strong>经》好看！<br />这本《诗经<strong>ˇ</strong>》好看！<br />这本《诗经》<strong>ˇ</strong>好看！<br />这本《诗经》好<strong>ˇ</strong>看！</td>
+</tr>
+<tr>
+<td>《.+<strong>ˇ</strong>》</td>
+<td>这本《诗经》好<strong>ˇ</strong>看！</td>
+<td>这本《诗<strong>ˇ</strong>经》好看！<br />这本《诗经<strong>ˇ</strong>》好看！<br />这本《诗经》<strong>ˇ</strong>好看！</td>
+</tr>
+<tr>
+<td>《.+<strong>ˇ</strong>》</td>
+<td>这本《诗经》好<strong>ˇ</strong>看！</td>
+<td>这本《诗<strong>ˇ</strong>经》好看！<br />这本《诗经<strong>ˇ</strong>》好看！<br />这本《诗经》<strong>ˇ</strong>好看！</td>
+</tr>
+<tr>
+<td>《.+<strong>ˇ</strong>》</td>
+<td>这本《诗经》<strong>ˇ</strong>好看！</td>
+<td>这本《诗<strong>ˇ</strong>经》好看！<br />这本《诗经<strong>ˇ</strong>》好看！</td>
+</tr>
+<tr>
+<td>《.+<strong>ˇ</strong>》</td>
+<td>这本《诗经》<strong>ˇ</strong>好看！</td>
+<td>这本《诗<strong>ˇ</strong>经》好看！<br />这本《诗经<strong>ˇ</strong>》好看！</td>
+</tr>
+<tr>
+<td>《.+<strong>ˇ</strong>》</td>
+<td>这本《诗经<strong>ˇ</strong>》好看！</td>
+<td>这本《诗<strong>ˇ</strong>经》好看！</td>
+</tr>
+<tr>
+<td>《.+<strong>ˇ</strong>》</td>
+<td>这本《诗经<strong>ˇ</strong>》好看！</td>
+<td>这本《诗<strong>ˇ</strong>经》好看！</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ul>
+<li>S4 S5 S6: character 6 7 8</li>
+</ul>
+</section>
+<section id="回顾完整的匹配流程" class="slide level2">
+<h2>回顾：完整的匹配流程</h2>
+<div class="columns">
+<div class="column left" style="width:68%;">
+<div class="fragment">
+<ul>
+<li>从第0位置开始。</li>
+<li>在当前位置上，<em>按照一定的顺序</em>穷尽表达式的<strong>所有的可能性</strong>。
+<ul>
+<li>若某一可能性能够匹配，则报告匹配。
+<ul>
+<li>若为
+<code>global</code>，则移动至匹配之文本的后一位置重新尝试。</li>
+</ul></li>
+<li>某所有可能性都不能匹配，则移动至下一位置重新尝试。</li>
+</ul></li>
+<li>若已至字符串的结尾位置，匹配结束；否则重复上一步。</li>
+</ul>
+</div>
+</div><div class="column right" style="width:30%;">
+<div class="fragment">
+<pre><code class="language-text">Copyright 2003</code></pre>
+<pre><code class="language-regex">^.*([0-9]+)</code></pre>
+</div>
+<div class="fragment">
+<ul>
+<li>复杂的嵌套情况</li>
+</ul>
+<pre><code class="language-text">ABCD</code></pre>
+<pre><code class="language-regex">(.+)+X</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="匹配开始和进行时的几种状况" class="slide level2">
+<h2>匹配开始和进行时的几种状况</h2>
+<ul>
+<li>match</li>
+<li>search</li>
+<li>findall</li>
+<li>从当前位置开始（Cursor）</li>
+</ul>
+</section></section>
+<section>
+<section id="进阶二-高级特性" class="title-slide slide level1">
+<h1>进阶二 : 高级特性</h1>
+
+</section>
+<section id="量词" class="slide level2">
+<h2>量词</h2>
+<pre><code class="language-regex">*?
+*+</code></pre>
+</section>
+<section class="slide level2">
+
+<h3 id="匹配优先忽略优先">匹配优先、忽略优先</h3>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<pre><code class="language-regex">*?
++?
+??
+{min, max}?</code></pre>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<pre><code class="language-regex">《.+》
+《.+?》</code></pre>
+</div>
+<div class="fragment">
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="占有优先量词">占有优先量词</h3>
+
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<pre><code class="language-regex">a*+
+a++
+a?+
+a{1,10}+</code></pre>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<pre><code class="language-regex">(.+)+X
+(.++)+X</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-text">《some book name with an open parenthesis</code></pre>
+<pre><code class="language-regex">《[^》]++》</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-text">《abc》abc</code></pre>
+<pre><code class="language-regex">《.*》
+《.*+》</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="位置" class="slide level2">
+<h2>位置</h2>
+
+<pre><code class="language-regex">^ \A
+$ \Z \z
+
+\G</code></pre>
+</section>
+<section class="slide level2">
+
+<h3 id="匹配的起始上一次结束">匹配的起始/上一次结束</h3>
+<pre><code class="language-regex">\G</code></pre>
+</section>
+<section class="slide level2">
+
+<h4 id="观察并思考">观察并思考</h4>
+<div class="columns">
+<div class="column left" style="width:60%; padding-right:4%;">
+<div class="fragment">
+<p>观察如下文本并思考：</p>
+<pre><code class="language-text">《五经》包括：易、书、诗、礼、春秋。
+No1 五经 &quot;易 书 诗 礼 春秋&quot;
+No2 十三经 &quot;诗经 尚书 周礼 仪礼 礼记 周易 左传 公羊传 谷梁传 论语 尔雅 孝经 孟子&quot;</code></pre>
+</div>
+<div class="fragment">
+<p>如何将之替换为</p>
+<pre><code class="language-text">《五经》包括：《易》、《书》、《诗》、《礼》、《春秋》。
+
+No1 五经 &quot;《易》 《书》 《诗》 《礼》 《春秋》&quot;
+No2 十三经 &quot;《诗经》 《尚书》 《周礼》 《仪礼》 《礼记》 《周易》 《左传》 《公羊传》 《谷梁传》 《论语》 《尔雅》 《孝经》 《孟子》&quot;</code></pre>
+</div>
+</div><div class="column right" style="width:32%;">
+<div class="fragment">
+<p>这些文本的共性是：</p>
+</div>
+<ul>
+<li class="fragment">后面为共通的模式</li>
+<li class="fragment">但开头处则与后面不同</li>
+</ul>
+<p></br></p>
+<div class="fragment">
+<p>解决方案：</p>
+</div>
+<ul>
+<li class="fragment"><del><code>(.*)+</code>的形式</del></li>
+<li class="fragment">环视</li>
+<li class="fragment"><code>\G</code></li>
+</ul>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h4 id="注釋文本">注釋文本</h4>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<div class="scrollbar">
+<pre><code class="language-text">《關雎》，后妃之德也，風之始也，所以風天下而正夫婦也，故用之鄉人焉，用之邦國焉。風，風也，教也。風以動之，教以化之。詩者，志之所之也，在心爲志，發言爲詩。情動於中而形於言，言之不足，故嗟歎之，嗟歎之不足，故永歌之，永歌之不足，不知手之舞之、足之蹈之也。情發於聲，聲成文謂之音。（發猶見也。聲謂宮、商、角、徵、羽也。聲成文者，宮、商上下相應。）治世之音，安以樂，其政和。亂世之音，怨以怒，其政乖。亡國之音，哀以思，其民困。故正得失，動天地，感鬼神，莫近於詩。先王以是經夫婦，成孝敬，厚人倫，美教化，移風俗。故詩有六義焉：一曰風，二曰賦，三曰比，四曰興，五曰雅，六曰頌。上以風化下，下以風刺上，主文而譎諫，言之者無罪，聞之者足以戒，故曰風。（風化、風刺，皆謂譬喻，不斥言也。主文，主與樂之宮商相應也。譎諫，詠歌依違，不直諫。）至于王道衰，禮義廢，政教失，國異政，家殊俗，而變風、變雅作矣。國史明乎得失之迹，傷人倫之廢，哀刑政之苛，吟詠情性，以風其上，達於事變而懷其舊俗者也。故變風發乎情，止乎禮義。發乎情，民之性也；止乎禮義，先王之澤也。是以一國之事，繋一人之本，謂之風。言天下之事，形四方之風，謂之雅。雅者，正也，言王政之所由廢興也。政有小大，故有小雅焉，有大雅焉。頌者，美盛德之形容，以其成功，告於神明者也。是謂四始，《詩》之至也。（始者，王道興衰之所由。）然則《關雎》、《麟趾》之化，王者之風，故繋之周公。南，言化自北而南也。《鵲巢》、《騶虞》之德，諸侯之風也，先王之所以教，故繋之召公。（自，從也。從北而南，謂其化從岐周被江漢之域也。先王，斥大王、王季。）《周南》、《召南》，正始之道，王化之基，是以《關雎》樂得淑女以配君子，憂在進賢，不淫其色。哀窈窕，思賢才，而無傷善之心焉，是《關雎》之義也。（哀蓋字之誤也，當爲衷；衷謂中心恕之，無傷害之心，謂好逑也。）</code></pre>
+</div>
+</div>
+</div><div class="column right">
+<ul>
+<li class="fragment"><code>《關雎》</code></li>
+<li class="fragment">序
+<ul>
+<li class="fragment">正文+注釋</li>
+</ul></li>
+</ul>
+<div class="fragment">
+<pre><code class="language-regex">(^《[^》]+》，|(?!^)\G)([^（）\n]+)（([^（）\n]+)）
+
+\1[\2]{\3}</code></pre>
+</div>
+</div>
+</div>
+
+</section>
+<section id="分组" class="slide level2">
+<h2>分组</h2>
+</section>
+<section class="slide level2">
+
+<h3 id="命名捕获">命名捕获</h3>
+
+<pre><code class="language-regex"># PCRE Python
+(?P&lt;Name&gt;)
+(?P=Name)
+
+# PCRE Java Javascript C#
+(?&lt;Name&gt;)
+\k&lt;Name&gt;
+
+# PCRE C#
+(?&#39;name&#39;)
+\k&#39;name&#39;</code></pre>
+</section>
+<section class="slide level2">
+
+<h3 id="relative-backreferences">Relative Backreferences</h3>
+
+<pre><code class="language-regex"># PCRE
+(a)(b)(c)\g{-1} # abcc
+(a)(b)(c)\g&#39;-1&#39;
+
+(a)(b)(c)\k&lt;-1&gt;
+(a)(b)(c)\k&#39;-1&#39;</code></pre>
+</section>
+<section class="slide level2">
+
+<h3 id="branch-reset-groups">Branch Reset Groups</h3>
+
+
+<pre><code class="language-regex">(?|(a)|(b)|(c))
+
+(?|(a)(b)|(c)d|e(f)g)</code></pre>
+</section>
+<section class="slide level2">
+
+<h3 id="固化分组atomic-grouping">固化分组<span class="en-term">Atomic
+Grouping</span></h3>
+
+
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<pre><code class="language-regex">(?&gt;...)</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">a(bc|b)c
+a(?&gt;bc|b)c</code></pre>
+<pre><code class="language-text">abcc
+abc</code></pre>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<pre><code class="language-regex">(?&gt;子桑伯子|子夏|子贡|子禽|子)曰</code></pre>
+<pre><code class="language-text">子桑伯子，</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="复杂流程" class="slide level2">
+<h2>复杂流程</h2>
+</section>
+<section class="slide level2">
+
+<h3 id="条件判断-conditionals">条件判断 Conditionals</h3>
+
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<pre><code class="language-regex">(?(?=...)then|else)
+(?(1)then|else)</code></pre>
+<p>《精通正则表达式》，P140</p>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<pre><code class="language-regex"># PCRE2
+［$1：《$2》，${3:+$4$5年版，:}$6頁。］</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="recursion">Recursion</h3>
+
+
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<pre><code class="language-regex">(?R) (?0) \g&lt;0&gt;</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">a(?R)?z</code></pre>
+<pre><code class="language-text">aaazzz</code></pre>
+
+</div>
+<div class="fragment">
+<p>数量问题</p>
+<pre><code class="language-regex">a(?R){3}z|q</code></pre>
+<pre><code class="language-text">aqqqz
+aaqqqzqqz</code></pre>
+</div>
+<div class="fragment">
+
+</div>
+</div><div class="column right">
+<div class="fragment">
+
+<pre><code class="language-regex">b(?:m|(?R))*e
+b(?&gt;m|(?R))*e
+
+b(?R)*e|m</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">（(?&gt;[^（）]|(?R))*）
+
+（(?R)*）|[^（）]+</code></pre>
+</div>
+</div>
+</div>
+
+</section>
+<section class="slide level2">
+
+<h3 id="subroutine">Subroutine</h3>
+
+
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<pre><code class="language-regex">(?1) (?+1) (?-1) (?&amp;name) (?P&lt;name&gt;)
+\g&lt;1&gt; \g&#39;1&#39; \g&lt;name&gt; \g&#39;name&#39; \g&lt;-1&gt; \g&#39;-1&#39; \g&lt;+1&gt; \g&#39;+1&#39;</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">\A(b(?:m|(?1))*e)\z
+\A(b(?&gt;m|(?1))*e)\z</code></pre>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<pre><code class="language-text">老道对小和尚讲了一个老道对小和尚讲了一个老道对小和尚讲了一个故事的故事的故事。
+
+老道对小和尚讲了一个老道对小和尚讲了一个老道对小和尚讲了一个老道对小和尚讲了一个故事的故事的故事的故事。</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">^(老道对小和尚讲了一个)((?:老道对小和尚讲了一个)(?2)*故事的)(?:故事。)$</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">(老道对小和尚讲了一个)((?1)(?2)*(?3)的)(故事)。</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">(老道对小和尚讲了一个)((?:\1)(?2)*(故事)的)(?:\3)。</code></pre>
+</div>
+
+
+
+</section>
+<section id="模式注释" class="slide level2">
+<h2>模式、注释</h2>
+</section>
+<section class="slide level2">
+
+<h3 id="模式">模式</h3>
+
+
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<pre><code class="language-regex">(?i)
+(?-i)
+
+(?:(?i))
+(?i:)</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-regex">(?i)
+(?s)
+(?m)
+(?U)
+(?x)</code></pre>
+</div>
+</div><div class="column right">
+<div class="fragment">
+<pre><code class="language-regex">he(?i)llo(?-i)
+he(?:(?i)llo)
+he(?i:llo)</code></pre>
+</div>
+<div class="fragment">
+<pre><code class="language-text">heLLO
+hello
+helLo
+
+HEllo</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="宽松格式与注释-free-spacing-comments">宽松格式与注释 <span
+class="term-en">Free-Spacing &amp; Comments</span></h3>
+
+
+<div class="fragment">
+<pre><code class="language-regex">(?# This is a comment in non-free-spacing mode)
+(?x)
+^《.+》   # 诗名
+(?:    # 章信息+句信息
+    (?:一章，[一二三四五六七八九十]+句。)    # 诗中章数等于1时的情况
+    | (?:[二三四五六七八九十]+章    # 诗中章数大于1时的情况
+         (?:
+             (?:，一章[一二三四五六七八九十]+)句    # 含有同样句数的章数目等于1时的情况
+             | (?:，[^一]章章[一二三四五六七八九十]+)句    # 含有同样句数的章数目大于1时的情况
+             | (?:，章[一二三四五六七八九十]+)句    # 每章句数皆相等时的情况
+         )+    # 以上结构重复一次或多次
+    )。
+)$</code></pre>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="文字文本范围literal-text-span">文字文本范围<span
+class="term-en">Literal-text span</span></h3>
+
+<pre><code class="language-regex">\Q[a-z](?:a|b|(c))\t\1\E</code></pre>
+</section>
+<section id="engines-and-flavors" class="slide level2">
+<h2>Engines and Flavors</h2>
+<div class="fragment">
+<ul>
+<li><p>POSIX <span class="expl">BRE/ERE</span></p></li>
+<li><p>PCRE <span class="expl">1/2</span></p></li>
+<li><p>…</p></li>
+<li><p><a
+href="https://gist.github.com/CMCDragonkai/6c933f4a7d713ef712145c5eb94a1816">Regular
+Expression Engine Comparison Chart</a></p></li>
+</ul>
+</div>
+</section></section>
+<section>
+<section id="dfanfaregex" class="title-slide slide level1">
+<h1>DFA/NFA/Regex</h1>
+
+</section>
+<section id="engines" class="slide level2">
+<h2>Engines</h2>
+<div class="fragment">
+<ul>
+<li>DFA</li>
+<li>NFA</li>
+<li>POSIX NFA</li>
+<li>Hybrid</li>
+</ul>
+</div>
+</section>
+<section id="finite-automata" class="slide level2">
+<h2>Finite Automata</h2>
+<div class="fragment">
+<ul>
+<li>Deterministic finite automaton <span class="expl">DFA</span></li>
+<li>Nondeterministic finite automaton <span class="expl">NFA</span></li>
+<li>确定有限状态自动机/非确定有限状态自动机/状态机</li>
+</ul>
+</div>
+<div class="fragment">
+<p><br></p>
+<ul>
+<li><a href="https://cyberzhg.github.io/toolbox/nfa2dfa"
+class="uri">https://cyberzhg.github.io/toolbox/nfa2dfa</a></li>
+<li><a href="https://27t.github.io/regex-visualizer/"
+class="uri">https://27t.github.io/regex-visualizer/</a></li>
+<li>正则表达式是怎么实现的？</li>
+</ul>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="scrollbar">
+<p>CMU 15-671Models of Software SystemsFall 1995<br> State Machine
+Basics<br> Garlan &amp; Wing Handout 4 18 September 1995<br></p>
+<p>A state machine is a simple mathematical model. It is a fundamental
+and ubiquitous model in Computer Science. <strong>A computer is nothing
+but a state machine.</strong> It has registers and memory (state) which
+contain values that change over time as its operations are executed
+(state transitions). A programming language is a way to describe a class
+of state machines. A program written in that programming language is a
+description of a state machine. The execution of that program
+corresponds to an execution of the state machine it describes.</p>
+<p><strong>A software system is a very, very complicated state
+machine.</strong> One thing that makes it complicated is its size: there
+is usually an infinite number of states, an infinite number of state
+transitions, an infinite number of executions, and each execution may
+possibly be infinite (not terminate). If everything were finite and not
+very large, we could probably reason about the behavior of the software
+system entirely in our heads. But since the real world is not so small
+and manageable, we need to find ways to model, describe, and reason
+about these large things in terms of a finite and small(er) number of
+small things.</p>
+<p><a
+href="https://www.cs.cmu.edu/afs/cs/academic/class/15671-f95/www/handouts/sm-basics/node1.html"
+class="uri">https://www.cs.cmu.edu/afs/cs/academic/class/15671-f95/www/handouts/sm-basics/node1.html</a></p>
+</div>
+</section>
+<section id="课程总结" class="slide level2">
+<h2>课程总结</h2>
+<div class="columns">
+<div class="column left">
+<div class="fragment">
+<p>为什么花如此长的时间讲正则表达式？</p>
+<ul>
+<li>简易</li>
+<li>实用</li>
+<li>深入剖析</li>
+</ul>
+</div>
+</div><div class="column right">
+<ul>
+<li class="fragment">检索、替换及与之相关的实践</li>
+<li class="fragment">古代文献检索之常见用例</li>
+<li class="fragment">古代文献文本研究之可能的新路径</li>
+<li class="fragment">知晓<em>较良好的实践方式</em></li>
+<li class="fragment">了解<em>形式语言</em></li>
+<li class="fragment">听说了<em>状态机</em></li>
+<li class="fragment">听说了<em>某些更本质一些的东东</em></li>
+<li class="fragment">逐渐形成<strong>思维方式</strong></li>
+</ul>
+</div>
+</div>
+
+</section></section>
+<section id="end-slide" class="title-slide slide level1"
+data-state="end-slide-body-class">
+<h1 data-state="end-slide-body-class">The End</h1>
+<style>
+.end-slide-body-class {
+    background: linear-gradient(rgba(240, 241, 235, 0.2), rgba(240, 241, 235, 0.2)), url("./img/face-pic-crop.jpg");
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
+}
+</style>
+<div class="word-area">
+<p class="word-show">
+感谢垂听，请多指正!
+</p>
+<p class="author-name">
+llfang@pku.edu.cn
+</p>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.2.1/dist/reveal.js"></script>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.2.1/plugin/notes/notes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.2.1/plugin/search/search.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.2.1/plugin/zoom/zoom.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'h/v',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'fade',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1680,
+
+        height: 1050,
+
+        // reveal.js plugins
+        plugins: [
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/raphael@2.3.0/raphael.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flowchart.js@1.17.1/release/flowchart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.26.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.26.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.26.0/components/prism-regex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.26.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<script src="./myjs/navbar.js"></script>
+<script src="./myjs/navbar0.js"></script>
+</body>
+</html>

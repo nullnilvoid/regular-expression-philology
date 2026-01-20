@@ -1,0 +1,37 @@
+.reveal section {
+	padding-top: 0;
+}
+
+#mycssnavbar {
+    font-family: "Sarasa Mono SC", Consolas, "等线", monospace;
+	font-size: 1.5rem;
+	display: flex;
+	position:  relative;
+}
+
+.navbarsub.present a{
+	color: orange;
+	text-decoration: none;
+}
+
+.navbarsub a{
+	color: grey;
+	text-decoration: none;
+}
+
+.navbarsub, .navbarsub.present{
+	margin-top: 20px;
+	margin-bottom: 20px;
+	padding-left: 0.4rem;
+	padding-right: 0.6rem;
+	border-left: 1px solid dimgrey;
+	max-width: 18rem;
+	white-space:  nowrap;
+	overflow:  hidden;
+	text-overflow: ellipsis;
+}
+
+.navbarsub a, .navbarsub.present a{
+	margin-top: 0;
+	margin-bottom: 0;
+}

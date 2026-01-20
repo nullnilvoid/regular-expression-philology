@@ -1,0 +1,31 @@
+ .language-regex .token.char-class-punctuation.punctuation {
+     color: #FDA53C;
+ }
+
+ .language-regex .token.char-class {
+     background-color: #55531E;
+ }
+
+ .language-regex .token.char-class-negation.operator {
+     color: red;
+ }
+
+ .language-regex .token.quantifier.number {
+     color: #61A8F4;
+ }
+
+ .language-regex .token.alternation.keyword {
+     color: #53A6B4;
+ }
+
+ .language-regex .token.group.punctuation {
+     color: #65EE3A;
+ }
+
+ .language-regex .anchor.function {
+     color: #E9C46A;
+ }
+
+ .language-regex .char-set.class-name {
+     color: #9671D9;
+ }

@@ -1,0 +1,95 @@
+/*title-slide*/
+
+#title-slide {
+    text-align: center;
+    top: 40%;
+    padding-top: 0rem;
+}
+
+#title-slide>.title {
+    top: 80%;
+    left: 60%;
+}
+
+/*face-slide*/
+
+
+#face-slide {
+    top: 0%;
+    height: 100%;
+    text-align: right;
+}
+
+
+#face-slide h1 {
+    display: none;
+}
+
+#face-slide .title-area {
+    display: inline-block;
+    position: relative;
+    top: 63%;
+    right: -1%;
+    background-color: rgba(10, 10, 10, 0.4);
+    font-family: "Times New Roman", "华文中宋", "Serif-CN", "思源宋体 Heavy", "宋体", "SansSerif-CN", "思源黑体 Normal", "黑体";
+}
+
+#face-slide .title-area::before {
+    content: "";
+    width: 9rem; /*12*/
+    height: 9rem; /*12*/
+    left: -1.5rem; /*-3*/
+    top: -1.5rem; /*-3*/
+    border-top-width: 1rem; /*2*/
+    border-top-style: solid;
+    border-top-color: rgb(255, 255, 255, 0.6);
+    border-left-width: 1rem; /*2*/
+    border-left-style: solid;
+    border-left-color: rgb(255, 255, 255, 0.6);
+    display: block;
+    position: absolute;
+}
+
+
+#face-slide .title-show {
+    font-size: var(--r-heading1-size);
+    font-weight: 700;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+    text-align: center;
+}
+
+
+#face-slide .author-name {
+    text-align: center;
+    font-family: "霞鹜文楷", "Times New Roman", "等线", "思源宋体 Light", "宋体", "SansSerif-CN", "思源黑体 Normal", "黑体";
+}
+
+/*
+#face-slide #title-lines {
+    position: absolute;
+    border-top: 2rem solid rgb(255, 255, 255, 0.6);
+    border-left: 2rem solid rgb(255, 255, 255, 0.6);
+    width: 12rem;
+    height: 12rem;
+    top: 55%;
+    left: 52%;
+}
+*/
+
+#face-slide .course-name {
+    position: absolute;
+    left: -3rem;
+    /*left: 4rem;*/
+    top: 5rem;
+    font-family: "霞鹜文楷", "等线", "思源黑体 Normal", "黑体";
+}
+
+
+.face-slide-body-class {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/demo-shixu-regex-dark.png");
+    background-repeat: no-repeat;
+    background-position: center top;
+    /* stretch to cover? */
+    background-size: cover;
+}

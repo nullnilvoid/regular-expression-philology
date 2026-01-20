@@ -1,0 +1,52 @@
+.reveal section {
+	padding-top: 0;
+}
+
+.reveal h2 {
+	margin-bottom: 1rem; /*original 2.4rem*/
+}
+
+#mycssnavbar_0 {
+    font-family: "Sarasa Mono SC", Consolas, "等线", monospace;
+	font-size: 1.5rem;
+	display: flex;
+	align-items: baseline;
+	position: fixed;
+	bottom:  0;
+	padding:  0;
+	margin:  0;
+	opacity: 0.4;
+}
+
+.navbarsub_0.present a{
+	color: white; /*tomato*/
+	text-decoration: none;
+}
+
+.navbarsub_0 a{
+	color: grey;
+	text-decoration: none;
+}
+
+.navbarsub_0, .navbarsub_0.present{
+	margin-top: 20px;
+	margin-bottom: 20px;
+	padding-left: 0.4rem;
+	padding-right: 0.6rem;
+	border-left: 1px solid grey;
+	max-width: 18rem;
+	white-space:  nowrap;
+	overflow:  hidden;
+	text-overflow: ellipsis;
+}
+
+
+.navbarsub_0 a, .navbarsub_0.present a{
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.navbarsub_0.imp a {
+	font-size: 2.2rem;
+	color: grey;
+}

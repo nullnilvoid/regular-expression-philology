@@ -1,0 +1,26 @@
+.reveal pre.line-numbers>code {
+    overflow: visible;
+    padding: 0;
+}
+
+/* to make the PrismJS with highlight line in alignment with other boxes */
+/* bug: scroll exists 
+换言之，在代码过长出现滚动条的情况下时，highlight line 无法出现，需要 zoom 一下才能出现。
+但是，若在此之前已有过 highlight line （+ line-numbers），
+则在有滚动条的情况下时亦有 highlight line.
+code[class*="language-"], pre[class*="language-"] {
+    width: 100%;
+    display: block;
+}
+*/
+
+/* Original: 90% -- this is the key to many strange width of <pre><code> in many situations */
+
+.reveal pre {
+    width: unset;
+}
+
+/* 目前的奇怪情状：
+1. line highlight 首次放映时不会出现，要 zoom 一下才会出现。
+2. zoom 出现后其长度是正常的。如果这时再刷新一下浏览器，就会出现长度不正常的情况。见 ReExp 页。
+*/

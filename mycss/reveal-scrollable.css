@@ -1,0 +1,36 @@
+/* for Chrome */
+html {
+    overflow: scroll;
+}
+
+/* also works
+::-webkit-scrollbar {
+    display: none;
+}
+*/
+
+::-webkit-scrollbar {
+    width: 0;
+    /* Remove scrollbar space */
+    background: transparent;
+    /* Optional: just make scrollbar invisible */
+}
+
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #05000021;
+}
+
+.scrollable {
+    bottom: 0px;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+.scrollbar {
+    /*border: 1px solid #eee;*/
+    height: 850px;
+    overflow: auto;
+    margin: 5px 0 0;
+    /*padding: 5px 10px 10px 10px;*/
+}

@@ -1,0 +1,258 @@
+/* most common */
+
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+    font-family: "SansSerif-CN", "思源黑體 Normal", "黑体";
+}
+
+em {
+    color: #66d3fa;
+}
+
+strong {
+    color: #fccf3e;
+}
+
+:root {
+    /*--r-main-font-size: 45px;*/
+    --r-heading1-text-shadow: 0 0 1px #999,
+        1px 1px 2px #888,
+        2px 2px 2px #777,
+        3px 3px 2px #666,
+        4px 4px 2px #555,
+        5px 5px 2px #333;
+    --r-heading4-size: 1.4em;
+}
+
+.reveal a{
+    color:#6699CC;
+    font-size:0.9em;
+    text-decoration: underline;
+}
+
+/* slide contents position */
+/* along with `center: false` in Reveal.initialize */
+section {
+    text-align: left;
+    padding-top: 5rem;
+}
+
+section.title-slide.level1 {
+    top: 50%;
+    padding-top: 0rem;
+}
+
+section.title-slide.level1>h1 {
+    /*padding-left: 5%;*/
+    font-size: 3.3em;
+}
+
+section.title-slide.level1>h1::before {
+    /*padding-left: 5%;*/
+    content: "➤ ";
+    color: #aa2233;
+    font-size: 0.8em;
+    text-shadow: 0 0 1px rgba(170, 34, 51, 1.0),
+        1px 1px 2px rgba(170, 34, 51, 0.8),
+        2px 2px 2px rgba(170, 34, 51, 0.6),
+        3px 3px 2px rgba(170, 34, 51, 0.4),
+        4px 4px 2px rgba(170, 34, 51, 0.2),
+        5px 5px 2px rgba(170, 34, 51, 0.0);
+}
+
+.reveal h2 {
+    margin-bottom: 2.4rem;
+}
+
+
+
+/* side by side page */
+.column.left {
+    width: 49%;
+    padding-right: 1%;
+
+}
+
+.column.right {
+    width: 49%;
+    padding-left: 1%;
+}
+
+.column.left-w {
+    width: 59%;
+    padding-right: 1%;
+
+}
+
+.column.right-t {
+    width: 39%;
+    padding-left: 1%;
+}
+
+.column.left-t {
+    width: 39%;
+    padding-right: 1%;
+
+}
+
+.column.right-w {
+    width: 59%;
+    padding-left: 1%;
+}
+
+/* ol,ul */
+.reveal ul, .reveal ol {
+    line-height: 2;
+}
+
+.list-squeeze ul {
+    line-height: 1;
+}
+
+ol {
+    padding-left: 0.5em;
+}
+
+ol li {
+    list-style-type: decimal;
+    /* or 'decimal-leading-zero', 'upper-alpha', 'lower-alpha'... */
+    list-style-position: inside;
+    /* KEY VALUE or 'outside' */
+    margin-left: 1em;
+    /* gives 'room' for the numbers to appear in */
+}
+
+.list-squeeze ul {
+    line-height: 1;
+}
+
+/* code */
+
+.reveal code[class*=language-], .reveal pre[class*=language-] {
+    font-family: "Sarasa Mono CL", Consolas, "等线", monospace;
+    font-size: 0.85em;
+    border-radius: unset;
+    background-color: #2D2D2D;
+}
+
+.reveal code, .reveal p code {
+    font-family: "Sarasa Mono CL", Consolas, "等线", monospace;
+    font-size: 0.85em;
+    padding: 0.2em 0.4em;
+    border-radius: 6px;
+    background-color: rgba(228, 228, 226, 0.1);
+}
+
+/* code block */
+.reveal pre code {
+    max-height: 700px;
+}
+
+/* language common */
+pre.language-text::before {
+    content: "“ ";
+    color: #414141;
+    font-size: 1.8em;
+    font-weight: 900;
+    left: 0.2em;
+    top: -0.1em;
+    position: absolute;
+}
+
+.reveal code.language-text{
+  white-space: pre-wrap;
+}
+
+pre.language-str::before {
+    content: "“ ";
+    color: #414141;
+    font-size: 1.8em;
+    font-weight: 900;
+    left: 0.2em;
+    top: -0.1em;
+    position: absolute;
+}
+
+.reveal code.language-str{
+  white-space: pre-wrap;
+}
+
+  /* make regex code block have a maker and make this maker lie below the characters */
+
+.reveal code.language-regex{
+  z-index: 1;
+  position: relative;
+  background-color: unset;
+}
+
+
+pre.language-regex::before {
+    content: "RE ";
+    color: #414141;
+    font-size: 1.6em;
+    font-weight: 700;
+    left: 0.2em;
+    top: -0.1em;
+    position: absolute;
+    z-index:0;
+}
+
+/*definition block*/
+  /*color: #ECDBBA;*/
+div.definition{
+  /*font-family:"Sauce Code Pro Medium","楷体";*/
+  font-size: 1.0em;
+  font-style: italic;
+  background-color: #2D2D2D;
+  padding: 0.4em 3em;
+  color: #FFEDED;
+  margin-bottom: 1rem;
+}
+
+div.definition::before{
+  content: "◆";
+  font-style: normal;
+  margin-left: -1.2em;
+  margin-top: 0.2em;
+  font-size: 1.3em;
+  position: absolute;
+  color: #FCCF3E;
+}
+
+div.definition div.source{
+  text-align: right;
+  font-style: normal;
+  /*font-family:"Baskerville Old Face", "楷体";*/
+  font-size: 0.8em;
+}
+
+div.definition div.source p::before{
+  /*font-family:"Baskerville Old Face", "楷体";*/
+  font-size: 0.3em;
+  content:"■　";
+}
+
+
+/*others*/
+div.caption{
+    top:70%;
+    position:absolute;
+    font-size:0.6em;
+    left:2rem;
+    background-color: rgba(0, 0, 0, 0.4);
+    font-family:楷体;
+}
+
+/* inline */
+/* explanation */
+span.expl{
+    color:#AA2233;
+    font-size:0.8em;
+    font-weight: 600;
+}
+
+span.term-en{
+    color:#C695C6;
+    font-size:0.9em;
+    font-weight: 400;
+    font-family: "Consolas", "Source Code Pro";
+}

@@ -1,0 +1,52 @@
+/*end-slide*/
+
+
+#end-slide {
+    top: 0%;
+    height: 100%;
+    text-align: left;
+}
+
+
+#end-slide h1 {
+    display: none;
+}
+
+#end-slide .word-area {
+    display: inline-block;
+    position: relative;
+    top: 63%;
+    left: 45%;
+    background-color: rgba(10, 10, 10, 0.5);
+    font-family: "Times New Roman", "华文中宋", "Serif-CN", "思源宋体 Heavy", "宋体", "SansSerif-CN", "思源黑体 Normal", "黑体";
+    font-size: 0.6em;
+}
+
+
+#end-slide .word-show {
+    font-size: var(--r-heading1-size);
+    font-weight: 700;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+
+#end-slide .author-name, #end-slide .author-email {
+    font-family: "Times New Roman","楷体",  "等线", "思源宋体 Light", "宋体", "SansSerif-CN", "思源黑体 Normal", "黑体";
+    font-size: 1.6em;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+
+/*
+Defined in HTML
+.end-slide-body-class {
+    background: linear-gradient(rgba(240, 241, 235, 0.2), rgba(240, 241, 235, 0.2)), url("../pics/end-face-pic.png");
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
+}
+*/

@@ -1,0 +1,70 @@
+.alert{
+  position: relative;
+  padding: 1rem 1rem;
+  margin-bottom: 1rem;
+  border: .1rem solid transparent;
+  border-radius: 1rem;
+}
+
+.alert p{
+  vertical-align: middle; /* correspond to middle in div.alert-warning-svg */
+  display: inline-flex; /*correspond to display in div.alert-warning-svg */
+  /*display: initial; correspond to display in div.alert-warning-svg */
+  break-after: always;
+  flex-wrap: wrap;
+  text-shadow: unset;
+  font-weight: 300;
+  width: 80%;
+}
+
+.alert p strong {
+  color: unset;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-position: under;
+}
+
+.alert-warning{
+  color: #F6D986;
+  background-color: #513F06;
+  border-color: #7d6b32;
+}
+
+.alert-info{
+  color: #7FBAEF;
+  background-color: #282A2A;
+  border-color: #083573;
+}
+
+/* svg color see:
+   https://stackoverflow.com/questions/22252472/how-to-change-the-color-of-an-svg-element
+   calculator:
+   https://codepen.io/sosuke/pen/Pjoqqp
+   To scale svg is very hard. see:
+   https://stackoverflow.com/questions/39056537/why-don-t-svg-images-scale-using-the-css-width-property
+*/
+div.alert-warning-svg {
+  vertical-align: middle; /* correspond to middle in .alert p */
+  flex-wrap: wrap;
+  display: inline-flex; /* correspond to display in .alert p */
+  height: 1rem; /* necessary */
+  width: 1rem;  /* necessary */
+  background-image: url("../svg/exclamation-triangle-fill.svg");
+  transform: scale(3.5);  /* scale the svg */
+  filter: invert(80%) sepia(92%) saturate(330%) hue-rotate(320deg) brightness(105%) contrast(93%); /* change color */
+  margin-right: 3rem;
+  margin-left: 3rem;
+}
+
+div.alert-info-svg {
+  vertical-align: middle; /* correspond to middle in .alert p */
+  display: inline-flex; /* correspond to display in .alert p */
+  flex-wrap: wrap;
+  height: 1rem; /* necessary */
+  width: 1rem;  /* necessary */
+  background-image: url("../svg/info-fill.svg");
+  transform: scale(3.5);  /* scale the svg */
+  filter: invert(74%) sepia(75%) saturate(1348%) hue-rotate(178deg) brightness(98%) contrast(91%);
+  margin-right: 3rem;
+  margin-left: 3rem;
+}

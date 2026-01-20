@@ -1,0 +1,7 @@
+.morning-handler, .table-handler, .nonheader-lv2-handler {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("../img/wallhaven-dpepjo_1920x1080.png");
+    background-repeat: no-repeat;
+    background-position: center top;
+    /* stretch to cover? */
+    background-size: cover;
+}
